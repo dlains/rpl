@@ -12,31 +12,31 @@ module Rpl
       
       it 'starts with an upper case character' do
         result = parse_symbol('Tree')
-        result.has_key?(:symbol).should be_true
+        expect(result.has_key?(:symbol)).to be_truthy
         result[:symbol] == 'Tree'
       end
       
       it 'can have additional upper case characters' do
         result = parse_symbol('TreeTop')
-        result.has_key?(:symbol).should be_true
+        expect(result.has_key?(:symbol)).to be_truthy
         result[:symbol] == 'TreeTop'
       end
       
       it 'is delimeted by spaces' do
         result = parse_symbol('Tree ')
-        result.has_key?(:symbol).should be_true
+        expect(result.has_key?(:symbol)).to be_truthy
         result[:symbol] == 'Tree'
       end
       
       it 'can be a single character' do
         result = parse_symbol('X')
-        result.has_key?(:symbol).should be_true
+        expect(result.has_key?(:symbol)).to be_truthy
         result[:symbol] == 'X'
       end
       
       it 'can include numbers' do
         result = parse_symbol('Tree10')
-        result.has_key?(:symbol).should be_true
+        expect(result.has_key?(:symbol)).to be_truthy
         result[:symbol] == 'Tree10'
       end
       
