@@ -1,8 +1,63 @@
 require 'spec_helper'
 
 module Rpl
-  
+
   describe Parser do
+
+    describe 'complex_sentence' do
+      
+      def parse_complex_sentence(input)
+        return Parser.new.complex_sentence.parse(input)
+      end
+
+      # it 'can be surrounded by parentheses' do
+      #   result = parse_complex_sentence('( P12 & P13 )')
+      #   expect(result.has_key?(:lparen)).to be_truthy
+      #   expect(result.has_key?(:rparen)).to be_truthy
+      #   expect(result.has_key?(:symbol)).to be_truthy
+      # end
+
+      it 'can be a negated symbol' do
+        result = parse_complex_sentence('! P12')
+        expect(result.has_key?(:not)).to be_truthy
+        expect(result.has_key?(:symbol)).to be_truthy
+      end
+      
+      it 'can be a conjunction' do
+        result = parse_complex_sentence('P11 & P12')
+        expect(result.has_key?(:symbol)).to be_truthy
+        expect(result.has_key?(:and)).to be_truthy
+      end
+
+      it 'can be a disjunction' do
+        result = parse_complex_sentence('P11 | P12')
+        expect(result.has_key?(:symbol)).to be_truthy
+        expect(result.has_key?(:or)).to be_truthy
+      end
+
+    end
+
+    describe 'atomic_sentence' do
+
+      def parse_atomic_sentence(input)
+        return Parser.new.atomic_sentence.parse(input)
+      end
+
+      it 'can be the true constant' do
+        result = parse_atomic_sentence('True')
+        expect(result.has_key?(:true)).to be_truthy
+      end
+
+      it 'can be the false constant' do
+        result = parse_atomic_sentence('False')
+        expect(result.has_key?(:false)).to be_truthy
+      end
+
+      it 'can be a symbol' do
+        result = parse_atomic_sentence('I90')
+        expect(result.has_key?(:symbol)).to be_truthy
+      end
+    end
 
     describe 'symbol' do
       
