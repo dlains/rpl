@@ -1,108 +1,58 @@
 require 'parslet'
 
 class Rpl::Parser < Parslet::Parser
-  # Start with a logic sentence.
-  # root :sentence
-  # 
-  # # Sentence structure.
-  # rule(:sentence) {
-  #   atomic_sentence |
-  #   complex_sentence
-  # }
-  # 
-  # rule(:atomic_sentence)  { 
-  #   predicate                                |
-  #   predicate >> lparen >> arglist >> rparen |
-  #   term >> op_equals >> term
-  # }
-  # 
-  # rule(:complex_sentence) { 
-  #   lparen >> sentence >> rparen          |
-  #   op_not >> sentence                    |
-  #   sentence >> op_and >> sentence        |
-  #   sentence >> op_or >> sentence         |
-  #   sentent >> op_implies >> sentence     |
-  #   sentence >> op_iif >> sentence        |
-  #   quantifier >> varlist >> sentence     |
-  # }
-  # 
-  # # Terms
-  # rule(:term) {
-  #   function >> lparen >> arglist >> rparen |
-  #   constant                                |
-  #   variable
-  # }
-  # 
-  # rule(:contant)          { match('[A-Z]').repeat(1) }
-  # rule(:variable)         { match('[a-z]').repeat(1) }
-  # 
-  # rule(:arglist)          { term >> (comma >> term).maybe }
-  # rule(:varlist)          { variable >> (comma >> variable).maybe }
-  # 
-  # # Quantifiers.
-  # rule(:all)        { str('all') >> space? }
-  # rule(:exists)     { str('exists') >> space?}
-  # 
-  # # Operator Rules.
-  # rule(:op)
-  # rule(:op_not)        { str('!') >> space? }
-  # rule(:op_equals)     { str('=') >> space? }
-  # rule(:op_and)        { str('&') >> space? }
-  # rule(:op_or)         { str('|') >> space? }
-  # rule(:op_implies)    { str('=>') >> space? }
-  # rule(:op_iif)        { str('<=>') >> space? }
-  # 
-  # # Character Rules.
-  # rule(:lparen)     { str('(') >> space? }
-  # rule(:rparen)     { str(')') >> space? }
-  # rule(:comma)      { str(',') >> space? }
-  # 
-
-  root :sentence
-  
-  # Sentenct - a sentence is an AtomicSentence or a ComplexSentenct.
-  rule(:sentence)         { atomic_sentence | complex_sentence }
-  
-  # AtomicSentence - can be True, False or a Symbol.
-  rule(:atomic_sentence)  { true_rule | false_rule | symbol }
-  
-  # ComplexSentence - can be a sentence surrounded by parentheses, or sentences operated on by logical operations.
-  rule(:complex_sentence) { 
-    lparen >> sentence >> rparen          |
-    not_rule >> sentence                  |
-    sentence >> and_rule >> sentence      |
-    sentence >> or_rule >> sentence       |
-    sentence >> implies_rule >> sentence  |
-    sentence >> iif_rule >> sentence
-  }
-  
-  # True and False constants. These are similar to keywords.
-  rule(:true_rule)        { str('True').as(:true) >> space? }
-  rule(:false_rule)       { str('False').as(:false) >> space? }
-  
-  # These are the operators: not, and, or, implies, and iif.
-  rule(:not_rule)         { str('!').as(:not) >> space? }
-  rule(:and_rule)         { str('&').as(:and) >> space? }
-  rule(:or_rule)          { str('|').as(:or) >> space? }
-  rule(:implies_rule)     { str('->').as(:implies) >> space? }
-  rule(:iif_rule)         { str('<->').as(:iif) >> space? }
+  # Match whitespace.
+  rule(:space)            { match('\s').repeat(1) }
+  rule(:space?)           { space.maybe }
 
   # Sentences can be grouped with parentheses
-  rule(:lparen)           { str('(').as(:lparen) >> space? }
-  rule(:rparen)           { str(')').as(:rparen) >> space? }
-  
+  rule(:lparen)           { str('(') >> space? }
+  rule(:rparen)           { str(')') >> space? }
+
+  # True and False constants. These are similar to keywords.
+  rule(:true_const)       { str('True').as(:true) >> space? }
+  rule(:false_const)      { str('False').as(:false) >> space? }
+
   # Symbols - a symbol starts with an upper case character and is followed by characters and digits.
   rule(:symbol) { (match('[A-Z]') >> match('[A-Za-z0-9]').repeat).as(:symbol) >> space? }
 
-  # Match whitespace.
-  rule(:space)      { match('\s').repeat(1) }
-  rule(:space?)     { space.maybe }
-end
+  # These are the operators: not, and, or, implies, and iif.
+  rule(:not_oper)         { str('not') >> space? }
+  rule(:and_oper)         { str('and') >> space? }
+  rule(:or_oper)          { str('or') >> space? }
+  rule(:implies_oper)     { str('implies') >> space? }
+  rule(:iif_oper)         { str('iif') >> space? }
 
-def parse(str)
-  logic = Logic.new
+  # Primary rule handles parentheses.
+  rule(:primary)          { lparen >> iif_operation >> rparen | true_const | false_const | symbol  }
+  
+  # Note that following rules are right-recursive.
+  rule(:not_operation) {
+    (not_oper >>
+      not_operation.as(:right)).as(:not) |
+    primary }
 
-  logic.parse(str)
-rescue Parslet::ParseFailed => failure
-  puts failure.cause.ascii_tree
+  rule(:and_operation) {
+    (not_operation.as(:left) >> and_oper >>
+      and_operation.as(:right)).as(:and) |
+    not_operation }
+
+  rule(:or_operation) {
+    (and_operation.as(:left) >> or_oper >>
+      or_operation.as(:right)).as(:or) |
+    and_operation }
+    
+  rule(:implies_operation) {
+    (or_operation.as(:left) >> implies_oper >>
+      implies_operation.as(:right)).as(:implies) |
+    or_operation }
+
+  rule(:iif_operation) {
+    (implies_operation.as(:left) >> iif_oper >>
+      iif_operation.as(:right)).as(:iif) |
+    implies_operation }
+
+  # Start at the lowest precendence rule.
+  root :iif_operation
+
 end
