@@ -22,5 +22,4 @@ spec = Gem::Specification.new do |s|
   s.add_development_dependency('rspec')
   s.add_development_dependency('simplecov')
   s.add_runtime_dependency('parslet')
-  s.add_runtime_dependency('gli')
 end
