@@ -1,6 +1,7 @@
 require 'rpl/data/data_store'
 require 'rpl/data/file_data_store'
 require 'rpl/knowledge_base'
+require 'rpl/model'
 require 'rpl/parser'
 require 'rpl/sentence'
 require 'rpl/version'

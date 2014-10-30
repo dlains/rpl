@@ -6,7 +6,6 @@ module Rpl
 
     def initialize()
       @sentences = []
-      @query = nil
     end
     
     def tell(sentence)
@@ -14,19 +13,19 @@ module Rpl
     end
 
     def ask(query)
-      @query = Sentence.new(query)
+      alpha = Sentence.new(query)
+      return Inference::Entails.entails?(self, alpha)
     end
 
-    def symbols
-      result = []
-      @sentences.each do |sentence|
-        result << sentence.symbols
+    def as_sentence
+      return nil if @sentences.empty?
+      return @sentences.shift.sentence if @sentences.size == 1
+      full_sentence = @sentences.pop.sentence
+      @sentences.reverse_each do |sentence|
+        full_sentence = {and: {left: sentence.sentence, right: full_sentence}}
       end
-      result << @query.symbols
-      
-      return result
+      return full_sentence
     end
-
   end
 
 end
