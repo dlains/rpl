@@ -19,8 +19,9 @@ module Rpl
       
         sentence = @kb.as_sentence
         expect(sentence).to_not be_nil
-        expect(sentence[:iif][:left][:symbol]).to eq('PA')
-        expect(sentence[:iif][:right][:symbol]).to eq('PB')
+        expect(sentence.operator).to eq(Sentence::OPERATOR_IIF)
+        expect(sentence.simple_sentence(0)).to eq('PA')
+        expect(sentence.simple_sentence(1)).to eq('PB')
       end
 
       it 'should join all the sentences in the knowledge base with and clauses' do
@@ -29,10 +30,12 @@ module Rpl
       
         sentence = @kb.as_sentence
         expect(sentence).to_not be_nil
-        expect(sentence[:and][:left][:and][:left][:symbol]).to eq('PA')
-        expect(sentence[:and][:left][:and][:right][:symbol]).to eq('PB')
-        expect(sentence[:and][:right][:or][:left][:symbol]).to eq('PB')
-        expect(sentence[:and][:right][:or][:right][:symbol]).to eq('PC')
+        expect(sentence.operator).to eq(Sentence::OPERATOR_AND)
+        expect(sentence.simple_sentence(0).operator).to eq(Sentence::OPERATOR_AND)
+        expect(sentence.simple_sentence(0).simple_sentence(0)).to eq('PA')
+        expect(sentence.simple_sentence(0).simple_sentence(1)).to eq('PB')
+        expect(sentence.simple_sentence(1).simple_sentence(0)).to eq('PB')
+        expect(sentence.simple_sentence(1).simple_sentence(1)).to eq('PC')
       end
     end
 

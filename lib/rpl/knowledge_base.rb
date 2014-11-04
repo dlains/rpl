@@ -8,21 +8,24 @@ module Rpl
       @sentences = []
     end
     
-    def tell(sentence)
-      @sentences << Sentence.new(sentence)
+    def tell(*sentences)
+      sentences.each do |sentence|
+        parsed = Transformer.new.apply(Parser.new.parse(sentence))
+        @sentences << parsed unless @sentences.include?(parsed)
+      end
     end
 
     def ask(query)
-      alpha = Sentence.new(query)
+      alpha = Transformer.new.apply(Parser.new.parse(query))
       return Inference::Entails.entails?(self, alpha)
     end
 
     def as_sentence
       return nil if @sentences.empty?
-      return @sentences.shift.sentence if @sentences.size == 1
-      full_sentence = @sentences.pop.sentence
+      return @sentences.shift if @sentences.size == 1
+      full_sentence = @sentences.pop
       @sentences.reverse_each do |sentence|
-        full_sentence = {and: {left: sentence.sentence, right: full_sentence}}
+        full_sentence = ComplexSentence.new(Sentence::OPERATOR_AND, sentence, full_sentence)
       end
       return full_sentence
     end

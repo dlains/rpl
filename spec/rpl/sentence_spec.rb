@@ -4,24 +4,106 @@ module Rpl
 
   describe Sentence do
 
-    describe '#symbols' do
+    before do
+      @sentence = Sentence.new
+    end
 
-      it 'returns an array of symbols in the sentence' do
-        sentence = Sentence.new('PA implies (PB or PC)')
-        result = sentence.symbols
-        expect(result).to_not be_nil
-        expect(result.size).to eq(3)
-        expect(result[0]).to eq('PA')
-        expect(result[1]).to eq('PB')
-        expect(result[2]).to eq('PC')
-      end
-
-      it 'returns an empty array if the sentence contains no symbols' do
-        sentence = Sentence.new('not True')
-        result = sentence.symbols
-        expect(result).to be_empty
+    describe '#operator' do
+      it 'returns nil for simple sentences' do
+        expect(@sentence.operator).to be_nil
       end
     end
+
+    describe '#simple_sentence_count' do
+      it 'returns zero for simple sentences' do
+        expect(@sentence.simple_sentence_count).to eq(0)
+      end
+    end
+
+    describe '#simple_sentence' do
+      it 'returns nil for simple sentences' do
+        expect(@sentence.simple_sentence(0)).to be_nil
+      end
+    end
+
+    describe '#is_not_sentence?' do
+      it 'returns false for simple sentences' do
+        expect(@sentence.is_not_sentence?).to eq(false)
+      end
+    end
+
+    describe '#is_and_sentence?' do
+      it 'returns false for simple sentences' do
+        expect(@sentence.is_and_sentence?).to eq(false)
+      end
+    end
+
+    describe '#is_or_sentence?' do
+      it 'returns false for simple sentences' do
+        expect(@sentence.is_or_sentence?).to eq(false)
+      end
+    end
+
+    describe '#is_implies_sentence?' do
+      it 'returns false for simple sentences' do
+        expect(@sentence.is_implies_sentence?).to eq(false)
+      end
+    end
+
+    describe '#is_iif_sentence?' do
+      it 'returns false for simple sentences' do
+        expect(@sentence.is_iif_sentence?).to eq(false)
+      end
+    end
+
+    describe '#is_identifier?' do
+      it 'returns true for simple sentences' do
+        expect(@sentence.is_identifier?).to eq(true)
+      end
+    end
+
+    describe '#is_true_identifier?' do
+      it 'raises a not implemented exception for simple sentences' do
+        expect {@sentence.is_true_identifier?}.to raise_error(NotImplementedError)
+      end
+    end
+
+    describe '#is_false_identifier?' do
+      it 'raises a not implemented exception for simple sentences' do
+        expect {@sentence.is_false_identifier?}.to raise_error(NotImplementedError)
+      end
+    end
+
+    describe '#is_unary_sentence?' do
+      it 'returns false for simple sentences' do
+        expect(@sentence.is_unary_sentence?).to eq(false)
+      end
+    end
+    
+    describe '#is_binary_sentence?' do
+      it 'returns false for simple sentences' do
+        expect(@sentence.is_binary_sentence?).to eq(false)
+      end
+    end
+
+    # describe '#identifiers' do
+    #
+    #   it 'returns an array of identifiers in the sentence' do
+    #     sentence = Sentence.new('PA implies (PB or PC)')
+    #     result = sentence.identifiers
+    #     expect(result).to_not be_nil
+    #     expect(result.size).to eq(3)
+    #     expect(result[0]).to eq('PA')
+    #     expect(result[1]).to eq('PB')
+    #     expect(result[2]).to eq('PC')
+    #   end
+    #
+    #   it 'returns an empty array if the sentence contains no identifiers' do
+    #     sentence = Sentence.new('not True')
+    #     result = sentence.identifiers
+    #     expect(result).to be_empty
+    #   end
+    # end
     
     describe '#to_s' do
       it 'displays the original sentence' do
@@ -31,105 +113,6 @@ module Rpl
         expect(result).to eq('PA implies (PB or PC)')
       end
     end
-    
-    describe '#is_symbol?' do
-      it 'returns true if the sentence is just a symbol' do
-        sentence = Sentence.new('PA')
-        expect(sentence.is_symbol?).to eq(true)
-      end
-      
-      it 'returns false if the sentence is not a symbol' do
-        sentence = Sentence.new('PB iif PA')
-        expect(sentence.is_symbol?).to eq(false)
-      end
-    end
-    
-    describe '#is_unary_sentence?' do
-      it 'returns true if the sentence is a negation' do
-        sentence = Sentence.new('not PA')
-        expect(sentence.is_unary_sentence?).to eq(true)
-      end
-      
-      it 'returns false if the sentence is binary' do
-        sentence = Sentence.new('PC implies (PA or PD)')
-        expect(sentence.is_unary_sentence?).to eq(false)
-      end
-      
-      it 'returns false if the sentence is a symbol' do
-        sentence = Sentence.new('PA')
-        expect(sentence.is_unary_sentence?).to eq(false)
-      end
-      
-      it ' returns false if the sentence is binary but contains a negation' do
-        sentence = Sentence.new('PA iif not PC')
-        expect(sentence.is_unary_sentence?).to eq(false)
-      end
-    end
-    
-    describe '#is_binary_sentence?' do
-      it 'returns true if the sentence is a conjunction' do
-        sentence = Sentence.new('PA and PB')
-        expect(sentence.is_binary_sentence?).to eq(true)
-      end
-      
-      it 'returns true if the sentence is a disjunctions' do
-        sentence = Sentence.new('PA or PB')
-        expect(sentence.is_binary_sentence?).to eq(true)
-      end
-      
-      it 'returns true if the sentence is an implication' do
-        sentence = Sentence.new('PA implies PB')
-        expect(sentence.is_binary_sentence?).to eq(true)
-      end
-      
-      it 'returns true if the sentence is a biconditional' do
-        sentence = Sentence.new('PA iif PB')
-        expect(sentence.is_binary_sentence?).to eq(true)
-      end
-      
-      it 'returns false if the sentence is a negations' do
-        sentence = Sentence.new('not PA')
-        expect(sentence.is_binary_sentence?).to eq(false)
-      end
-      
-      it 'returns false if the sentence is a symbol' do
-        sentence = Sentence.new('PA')
-        expect(sentence.is_binary_sentence?).to eq(false)
-      end
-    end
 
-    describe '#is_true_literal?' do
-      it 'returns true if the sentence is the true literal' do
-        sentence = Sentence.new('True')
-        expect(sentence.is_true_literal?).to eq(true)
-      end
-      
-      it 'returns false if the sentence is the false literal' do
-        sentence = Sentence.new('False')
-        expect(sentence.is_true_literal?).to eq(false)
-      end
-      
-      it 'returns false if the sentence does not contain the true literal' do
-        sentence = Sentence.new('PA and PB')
-        expect(sentence.is_true_literal?).to eq(false)
-      end
-    end
-
-    describe '#is_false_literal?' do
-      it 'returns true if the sentence is the false literal' do
-        sentence = Sentence.new('False')
-        expect(sentence.is_false_literal?).to eq(true)
-      end
-      
-      it 'returns false if the sentence is the true literal' do
-        sentence = Sentence.new('True')
-        expect(sentence.is_false_literal?).to eq(false)
-      end
-      
-      it 'returns false if the sentence does not contain the false literal' do
-        sentence = Sentence.new('PA and PB')
-        expect(sentence.is_false_literal?).to eq(false)
-      end
-    end
   end
 end
