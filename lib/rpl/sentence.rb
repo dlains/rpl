@@ -77,9 +77,9 @@ module Rpl
       return find_identifiers(@sentence)
     end
 
-    def to_s
-      "#{@original_sentence}"
-    end
+    # def to_s
+    #   "#{@original_sentence}"
+    # end
 
     private
 

@@ -4,8 +4,8 @@ module Rpl
 
     attr_accessor :assignments
 
-    def initialize
-      @assignments = {}
+    def initialize(assignments = {})
+      @assignments = assignments
     end
 
     def is_true?(sentence)
@@ -36,31 +36,24 @@ module Rpl
     end
 
     def eval_binary_sentence(sentence)
+      first_val = sentence.simple_sentence(0).accept(self)
+      second_val = sentence.simple_sentence(1).accept(self)
+      
+      return nil if first_val == nil && second_val == nil
+      
+      case sentence.operator
+      when Sentence::OPERATOR_AND
+        return first_val && second_val
+      when Sentence::OPERATOR_OR
+        return first_val || second_val
+      when Sentence::OPERATOR_IMPLIES
+        return !(first_val && !second_val)
+      when Sentence::OPERATOR_IIF
+        return first_val == second_val
+      else
+        return nil
+      end
     end
-    # @Override
-    # public Boolean visitBinarySentence(ComplexSentence bs, Boolean arg) {
-    #   Boolean firstValue = (Boolean) bs.getSimplerSentence(0).accept(this,
-    #       null);
-    #   Boolean secondValue = (Boolean) bs.getSimplerSentence(1).accept(this,
-    #       null);
-    #   if ((firstValue == null) || (secondValue == null)) {
-    #     // strictly not true for or/and
-    #     // -FIX later
-    #     return null;
-    #   } else {
-    #     Connective connective = bs.getConnective();
-    #     if (connective.equals(Connective.AND)) {
-    #       return firstValue && secondValue;
-    #     } else if (connective.equals(Connective.OR)) {
-    #       return firstValue || secondValue;
-    #     } else if (connective.equals(Connective.IMPLICATION)) {
-    #       return !(firstValue && !secondValue);
-    #     } else if (connective.equals(Connective.BICONDITIONAL)) {
-    #       return firstValue.equals(secondValue);
-    #     }
-    #     return null;
-    #   }
-    # }
 
   end
 

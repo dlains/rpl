@@ -105,14 +105,14 @@ module Rpl
     #   end
     # end
     
-    describe '#to_s' do
-      it 'displays the original sentence' do
-        sentence = Sentence.new('PA implies (PB or PC)')
-        result = sentence.to_s
-        expect(result).to_not be_nil
-        expect(result).to eq('PA implies (PB or PC)')
-      end
-    end
+    # describe '#to_s' do
+    #   it 'displays the original sentence' do
+    #     sentence = Sentence.new('PA implies (PB or PC)')
+    #     result = sentence.to_s
+    #     expect(result).to_not be_nil
+    #     expect(result).to eq('PA implies (PB or PC)')
+    #   end
+    # end
 
   end
 end

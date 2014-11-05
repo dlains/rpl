@@ -1,6 +1,8 @@
 module Rpl
   class Transformer < Parslet::Transform
-    rule(:symbol => simple(:symbol)) { Identifier.new(symbol) }
+    rule(:symbol => simple(:symbol)) { Identifier.new(symbol.to_s) }
+    rule(:true => simple(:t))        { Identifier.new(t.to_s) }
+    rule(:false => simple(:f))       { Identifier.new(f.to_s) }
 
     rule(:iif => { :left => subtree(:left), :right => subtree(:right) }) do
       ComplexSentence.new(Rpl::Sentence::OPERATOR_IIF, left, right)
