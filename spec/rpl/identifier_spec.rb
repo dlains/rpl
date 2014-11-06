@@ -27,6 +27,20 @@ module Rpl
       end
     end
 
+    describe '#is_literal?' do
+      it 'returns true if the identifier is the true or false literal' do
+        identifier = Identifier.new('True')
+        expect(identifier.is_literal?).to eq(true)
+        identifier = Identifier.new('False')
+        expect(identifier.is_literal?).to eq(true)
+      end
+
+      it 'returns false if the identifier is a proposition symbol' do
+        identifier = Identifier.new('PA')
+        expect(identifier.is_literal?).to eq(false)
+      end
+    end
+
     describe '#==' do
       it 'returns true if the identifiers are equal' do
         identifier = Identifier.new('PA')

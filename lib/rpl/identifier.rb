@@ -19,6 +19,10 @@ module Rpl
       return @identifier == FALSE_SYMBOL
     end
 
+    def is_literal?
+      return is_true_identifier? || is_false_identifier?
+    end
+
     def ==(other)
       return self.identifier == other if other.class == String
       return self.class == other.class && self.identifier == other.identifier

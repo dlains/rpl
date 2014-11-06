@@ -74,7 +74,7 @@ module Rpl
     end
 
     def identifiers
-      return find_identifiers(@sentence)
+      return find_identifiers(self)
     end
 
     # def to_s
@@ -87,13 +87,18 @@ module Rpl
       return self.operator == operator
     end
 
-    # def find_symbols(hash)
-    #   symbols = []
-    #   hash.each do |k,v|
-    #     v.is_a?(Hash) ? symbols << find_symbols(v) : (symbols << v.to_s if k == :symbol)
-    #   end
-    #   return symbols.flatten
-    # end
+    def find_identifiers(sentence)
+      identifiers = []
+      if sentence.respond_to?('identifier')
+        identifiers << sentence.identifier unless sentence.is_literal?
+      end
+      if sentence.respond_to?('simple_sentences')
+        sentence.simple_sentences.each do |sentence|
+          identifiers << find_identifiers(sentence)
+        end
+      end
+      return identifiers.flatten
+    end
 
   end
 

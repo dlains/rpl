@@ -17,14 +17,15 @@ module Rpl
 
     def ask(query)
       alpha = Transformer.new.apply(Parser.new.parse(query))
-      return Inference::Entails.entails?(self, alpha)
+      return Inference::Entails.new.entails?(self, alpha)
     end
 
     def as_sentence
       return nil if @sentences.empty?
-      return @sentences.shift if @sentences.size == 1
-      full_sentence = @sentences.pop
-      @sentences.reverse_each do |sentence|
+      return @sentences.first if @sentences.size == 1
+      sentences = @sentences.dup
+      full_sentence = sentences.pop
+      sentences.reverse_each do |sentence|
         full_sentence = ComplexSentence.new(Sentence::OPERATOR_AND, sentence, full_sentence)
       end
       return full_sentence

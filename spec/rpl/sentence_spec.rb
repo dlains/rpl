@@ -86,24 +86,24 @@ module Rpl
       end
     end
 
-    # describe '#identifiers' do
-    #
-    #   it 'returns an array of identifiers in the sentence' do
-    #     sentence = Sentence.new('PA implies (PB or PC)')
-    #     result = sentence.identifiers
-    #     expect(result).to_not be_nil
-    #     expect(result.size).to eq(3)
-    #     expect(result[0]).to eq('PA')
-    #     expect(result[1]).to eq('PB')
-    #     expect(result[2]).to eq('PC')
-    #   end
-    #
-    #   it 'returns an empty array if the sentence contains no identifiers' do
-    #     sentence = Sentence.new('not True')
-    #     result = sentence.identifiers
-    #     expect(result).to be_empty
-    #   end
-    # end
+    describe '#identifiers' do
+
+      it 'returns an array of identifiers in the sentence' do
+        sentence = build_sentence('PA implies (PB or PC)')
+        result = sentence.identifiers
+        expect(result).to_not be_nil
+        expect(result.size).to eq(3)
+        expect(result[0]).to eq('PA')
+        expect(result[1]).to eq('PB')
+        expect(result[2]).to eq('PC')
+      end
+
+      it 'returns an empty array if the sentence contains no identifiers' do
+        sentence = build_sentence('not True')
+        result = sentence.identifiers
+        expect(result).to be_empty
+      end
+    end
     
     # describe '#to_s' do
     #   it 'displays the original sentence' do

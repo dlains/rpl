@@ -8,6 +8,11 @@ module Rpl
       @assignments = assignments
     end
 
+    def add!(key, value)
+      @assignments[key] = value
+      return self
+    end
+
     def is_true?(sentence)
       return sentence.accept(self) == true
     end
