@@ -18,12 +18,13 @@ module Rpl::Inference
       end
 
       symbol = symbols.shift
-      return check_all(kb, query, symbols, model.add!(symbol, true)) && check_all(kb, query, symbols, model.add!(symbol, false))
+      return check_all(kb, query, symbols.dup, model.union(symbol, true)) && check_all(kb, query, symbols.dup, model.union(symbol, false))
     end
 
     def identifiers(sentence, query)
       result = []
       result << sentence.identifiers
+      result = result.uniq
       result << query.identifiers
       
       return result.flatten

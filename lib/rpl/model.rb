@@ -8,9 +8,8 @@ module Rpl
       @assignments = assignments
     end
 
-    def add!(key, value)
-      @assignments[key] = value
-      return self
+    def union(identifier, value)
+      return Model.new(self.assignments.merge({identifier => value}))
     end
 
     def is_true?(sentence)
