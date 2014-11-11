@@ -8,6 +8,14 @@ module Rpl
     OPERATOR_IMPLIES = 'implies'
     OPERATOR_IIF     = 'iif'
 
+    OPERATOR_PRECEDENCE = {
+      OPERATOR_NOT     => 5,
+      OPERATOR_AND     => 4,
+      OPERATOR_OR      => 3,
+      OPERATOR_IMPLIES => 2,
+      OPERATOR_IIF     => 1
+    }
+
     def operator
       return nil
     end

@@ -30,6 +30,11 @@ module Rpl
       end
       return full_sentence
     end
+
+    def to_s
+      return "#{sentences.join("\n")}"
+    end
+
   end
 
 end

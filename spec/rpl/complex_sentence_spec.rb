@@ -202,7 +202,28 @@ module Rpl
       it 'returns false if the operators do not match' do
         expect(@disjunction_sentence == @conjunction_sentence).to eq(false)
       end
+    end
 
+    describe '#to_s' do
+      it 'converts a simple sentence into a string' do
+        sentence = build_sentence('PA and PB')
+        expect(sentence.to_s).to eq('PA and PB')
+      end
+
+      it 'converts a complex sentence into a string' do
+        sentence = build_sentence('PA or PB implies PC and PD')
+        expect(sentence.to_s).to eq('PA or PB implies PC and PD')
+      end
+      
+      it 'converts a complex sentence and adds parentheses' do
+        sentence = build_sentence('(PA iif PB) and PC')
+        expect(sentence.to_s).to eq('(PA iif PB) and PC')
+      end
+
+      it 'converts a negation into a string' do
+        sentence = build_sentence('not (PA and PB)')
+        expect(sentence.to_s).to eq('not (PA and PB)')
+      end
     end
 
   end
