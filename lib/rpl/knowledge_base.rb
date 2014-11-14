@@ -35,6 +35,16 @@ module Rpl
       return "#{sentences.join("\n")}"
     end
 
+    def store
+      data_store = Data::DataStore.create(Rpl.configuration.data_store)
+      data_store.store
+    end
+
+    def load
+      data_store = Data::DataStore.create(Rpl.configuration.data_store)
+      data_store.load
+    end
+
   end
 
 end

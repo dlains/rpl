@@ -2,21 +2,22 @@ module Rpl::Data
 
   class DataStore
     
-    def self.create(options)
-      # if options.has_key?(:db) || options.has_key?(:db_data_store)
-      #   # Database Data Store is not implemented yet.
-      #   raise NotImplementedError
-      # end
-      
-      puts "About to create new file data store with path: #{options[:f]}"
-      return FileDataStore.new(options[:f])
+    def self.create(type)
+      case type
+      when 'File'
+        return FileDataStore.new
+      when 'Database'
+        return DatabaseDataStore.new
+      else
+        raise InvalidArgumentError
+      end
     end
 
-    def add_sentence(kb_name, sentence)
+    def store(kb)
       raise NotImplementedError
     end
     
-    def load_sentences(kb_name)
+    def load
       raise NotImplementedError
     end
 
