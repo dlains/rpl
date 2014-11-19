@@ -6,7 +6,9 @@ and represent some assertion about the world. Once the knowledge base has suffic
 about the world it can be queried. The knowledge base will then use one of a number of inference
 algorithms to produce an answer to the query.
 
-# Install
+# Documentation
+
+## Install
 
 ```shell
 gem install rpl
@@ -21,9 +23,10 @@ gem 'rpl'
 
 and run `bundle install` from your shell.
 
-# Documentation
+## Usage
 
-# Licence
+## More Information
 
-# Contributing
+## Contributing
 
+## Licence
