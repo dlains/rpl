@@ -1,4 +1,4 @@
-# Rpl
+# Rpl [![Build Status](https://semaphoreapp.com/api/v1/projects/4a5d1a57-b5e9-46e1-9df3-a5c1ffb38bf5/292314/shields_badge.svg)](https://semaphoreapp.com/dlains/rpl)
 
 Rpl is a Ruby based propositional logic library. Propositional logic is a simple but powerful
 knowledge representation language. Propositional logic sentences are stored in a knowledge base
