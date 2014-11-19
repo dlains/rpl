@@ -3,22 +3,30 @@ module Rpl::Data
   class FileDataStore < DataStore
 
     def initialize(file_path)
-      create_directory(file_path)
-      @data_store = File.open(file_path, 'a+')
+      @file_path = file_path
     end
 
-    def add_sentence(kb_name, sentence)
-      puts "Adding sentence #{sentence} to knowledge base #{kb_name}"
+    def save(kb)
+      raise ArgumentError unless kb.is_a?(Rpl::KnowledgeBase)
+      create_directory
+      File.open(@file_path, 'a+') do |file|
+        file.write(kb.to_s)
+      end
     end
     
-    def load_sentences(kb_name)
-      puts "Reading sentences from knowledge base #{kb_name}"
+    def load(kb)
+      raise ArgumentError unless kb.is_a?(Rpl::KnowledgeBase)
+      File.open(@file_path, 'r') do |file|
+        file.each_line do |line|
+          kb.tell(line)
+        end
+      end
     end
 
     private
     
-    def create_directory(file_path)
-      FileUtils.mkdir_p(File.dirname(file_path)) unless File.directory?(File.dirname(file_path))
+    def create_directory
+      FileUtils.mkdir_p(File.dirname(@file_path)) unless File.directory?(File.dirname(@file_path))
     end
   end
 

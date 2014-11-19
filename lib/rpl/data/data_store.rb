@@ -5,7 +5,7 @@ module Rpl::Data
     def self.create(type)
       case type
       when 'File'
-        return FileDataStore.new
+        return FileDataStore.new(File.join(Rpl.configuration.file_path, Rpl.configuration.file_name))
       when 'Database'
         return DatabaseDataStore.new
       else
@@ -13,11 +13,11 @@ module Rpl::Data
       end
     end
 
-    def store(kb)
+    def save(kb)
       raise NotImplementedError
     end
     
-    def load
+    def load(kb)
       raise NotImplementedError
     end
 
